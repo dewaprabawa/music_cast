@@ -6,6 +6,7 @@ import 'package:music_cast/commons/box_name/hive_box_name.dart';
 import 'package:music_cast/commons/constants/constants.dart';
 import 'package:music_cast/features/music_player/presentation/song_data_cubit/song_data_cubit.dart';
 import 'package:music_cast/features/music_player/presentation/music_player_cubit/music_player_cubit.dart';
+import 'package:music_cast/features/music_playlist/presentation/pages/play_list_page.dart';
 import 'package:music_cast/features/music_playlist/presentation/providers/playlist_model.dart';
 
 class BuildArtistCard extends StatelessWidget {
@@ -20,7 +21,9 @@ class BuildArtistCard extends StatelessWidget {
     if (artistName == "My Playlist") {
       return InkWell(
         onTap: () async {
-          await context.read<PlaylistModel>().startFetchPlaylist();
+          await context.read<PlaylistModel>().startFetchPlaylist().whenComplete((){
+            _showBottomSheet(context);
+          });
         },
         child: ValueListenableBuilder(
             valueListenable: Hive.box(HiveBoxName.playlist).listenable(),
@@ -94,4 +97,13 @@ class BuildArtistCard extends StatelessWidget {
       );
     }
   }
+
+  void _showBottomSheet(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext context) {
+      return const PlaylistPage();
+    },
+  );
+}
 }

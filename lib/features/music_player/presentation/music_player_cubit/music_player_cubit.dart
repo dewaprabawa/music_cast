@@ -13,18 +13,16 @@ import 'package:audioplayers/audioplayers.dart';
 part 'music_player_state.dart';
 
 class MusicPlayerCubit extends Cubit<MusicPlayerState> {
-  
-   late AudioPlayer _audioPlayer;
+  late AudioPlayer _audioPlayer;
 
-   late StreamSubscription<Duration> _durationSubscription;
-   late StreamSubscription<Duration> _positionSubscription;
-   late StreamSubscription<void> _onCompletionSubscription;
+  late StreamSubscription<Duration> _durationSubscription;
+  late StreamSubscription<Duration> _positionSubscription;
+  late StreamSubscription<void> _onCompletionSubscription;
 
-  MusicPlayerCubit() : super(const MusicPlayerState()){
-   _audioPlayer = AudioPlayer();
+  MusicPlayerCubit() : super(const MusicPlayerState()) {
+    _audioPlayer = AudioPlayer();
   }
 
- 
   @override
   Future<void> close() {
     _disposeAudioPlayer();
@@ -51,10 +49,9 @@ class MusicPlayerCubit extends Cubit<MusicPlayerState> {
   Future<void> playMusic({int? playIndex, ItuneEntity? currentSong}) async {
     try {
       if (currentSong != null) {
-        
-        // _startListenDurationAndPosition();
+        _startListenDurationAndPosition();
 
-        // await _audioPlayer.play(UrlSource(currentSong.previewUrl!));
+        await _audioPlayer.play(UrlSource(currentSong.previewUrl!));
 
         emit(state.copyWith(
             isShowPlayer: true,
@@ -84,9 +81,6 @@ class MusicPlayerCubit extends Cubit<MusicPlayerState> {
 
   Future<void> _resumeMusic() async {
     await _audioPlayer.resume();
-    _durationSubscription.resume();
-    _positionSubscription.resume();
-    _onCompletionSubscription.resume();
     emit(state.copyWith(
       status: PlayerStatus.playing,
     ));
@@ -94,9 +88,6 @@ class MusicPlayerCubit extends Cubit<MusicPlayerState> {
 
   Future<void> _stopMusic() async {
     await _audioPlayer.stop();
-    _durationSubscription.cancel();
-    _positionSubscription.cancel();
-    _onCompletionSubscription.cancel();
     emit(state.copyWith(
       status: PlayerStatus.stop,
     ));
@@ -104,20 +95,17 @@ class MusicPlayerCubit extends Cubit<MusicPlayerState> {
 
   Future<void> _pauseMusic() async {
     await _audioPlayer.pause();
-    _durationSubscription.pause();
-    _positionSubscription.pause();
-    _onCompletionSubscription.pause();
     emit(state.copyWith(status: PlayerStatus.paused));
   }
 
   void _startListenDurationAndPosition() {
-   _durationSubscription = _audioPlayer.onDurationChanged.listen((duration) {
+    _durationSubscription = _audioPlayer.onDurationChanged.listen((duration) {
       emit(state.copyWith(
           max: _toSecondsDouble(duration),
           durationText: _toSecondsString(duration)));
     });
 
-   _positionSubscription = _audioPlayer.onPositionChanged.listen((position) {
+    _positionSubscription = _audioPlayer.onPositionChanged.listen((position) {
       emit(state.copyWith(
           value: _toSecondsDouble(position),
           positionText: _toSecondsString(position)));
@@ -149,10 +137,9 @@ class MusicPlayerCubit extends Cubit<MusicPlayerState> {
   }
 
   void _disposeAudioPlayer() {
-  _durationSubscription.cancel();
-  _positionSubscription.cancel();
-  _onCompletionSubscription.cancel();
-  _audioPlayer.dispose();
-}
-
+    _durationSubscription.cancel();
+    _positionSubscription.cancel();
+    _onCompletionSubscription.cancel();
+    _audioPlayer.dispose();
+  }
 }
