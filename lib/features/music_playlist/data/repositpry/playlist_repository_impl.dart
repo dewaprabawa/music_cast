@@ -27,7 +27,6 @@ class PlaylistRepositoryImpl extends PlaylistRepository {
 
   @override
   Future<Either<Failure, bool>> hasContained(String id) async {
-    print(id);
     try {
       final data = localeDataSource.loadList();
       if (data != null) {
