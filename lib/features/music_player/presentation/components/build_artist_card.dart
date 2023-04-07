@@ -74,7 +74,7 @@ class BuildArtistCard extends StatelessWidget {
           context.read<MusicPlayerCubit>().setIsShowMusicPlayer(false);
         },
         child: Container(
-          margin: EdgeInsets.only(right: index == 4 ? 0 : 10),
+          margin: EdgeInsets.only(right: index == 4 ? 10 : 10),
           decoration: BoxDecoration(
               border: Border.all(color: SharedConstant.greyShade),
               borderRadius: BorderRadius.circular(12),

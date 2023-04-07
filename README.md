@@ -2,6 +2,9 @@
 
 A take home project.
 
+![Music Cast](https://github.com/dewaprabawa/music_cast/raw/master/image_music_cast.png)
+
+
 Supported Devices
 -----------------
 
