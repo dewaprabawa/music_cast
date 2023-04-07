@@ -21,6 +21,7 @@ class BuildArtistCard extends StatelessWidget {
     if (artistName == "My Playlist") {
       return InkWell(
         onTap: () async {
+          print("TEST");
           await context.read<PlaylistModel>().startFetchPlaylist().whenComplete((){
             _showBottomSheet(context);
           });

@@ -76,6 +76,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage>
         body: SafeArea(
           child: Column(
             children: [
+              SizedBox(height: 30,),
               SearchTextField(searchSongController: searchSongController),
               const HeaderTitle(
                 icon: Icons.star,
