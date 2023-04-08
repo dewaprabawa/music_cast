@@ -38,6 +38,7 @@ class SongListView extends StatelessWidget {
                   itemCount: songs.length,
                   itemBuilder: (context, index) {
                     return Padding(
+                      key: Key(SharedConstant.musicItemKey),
                       padding:
                           const EdgeInsets.only(left: 20, right: 20, bottom: 15),
                       child: InkWell(

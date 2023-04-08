@@ -21,4 +21,12 @@ class SharedConstant {
    static Color nativeWhite = Colors.white;
    static Color softPurplerApp = Color.fromARGB(255, 211, 203, 255);
    static Color softRed = Color.fromARGB(255, 253, 133, 133);
+   
+   static String musicItemKey = "MUSIC_ITEM_KEY";
+   static String musicLikeButtonKey = "MUSIC_LIKE_BUTTON_KEY";
+   static String musicShowPlaylistButtonKey = "MUSIC_ON_SHOW_PLAYLIST_BUTTON_KEY";
+   static String bottomMusicPlayerWidget = "BOTTOM_MUSIC_PLAYER_WIDGET";
+
+   
+
 }
