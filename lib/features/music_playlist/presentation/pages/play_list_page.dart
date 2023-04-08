@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:music_cast/commons/constants/constants.dart';
+import 'package:music_cast/features/music_player/domain/entities/itunes_entity.dart';
 import 'package:music_cast/features/music_player/presentation/components/header_title.dart';
 import 'package:music_cast/features/music_playlist/presentation/providers/playlist_model.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +21,9 @@ class _PlaylistPageState extends State<PlaylistPage> {
       var songs = model.playlists;
       return Column(
         children: [
-          const SizedBox(height: 10,),
+          const SizedBox(
+            height: 10,
+          ),
           const HeaderTitle(
               icon: Icons.star,
               leadingText: "Playlist",
@@ -78,6 +81,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                   width: 10,
                                 ),
                                 Expanded(
+                                  flex: 3,
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -107,6 +111,24 @@ class _PlaylistPageState extends State<PlaylistPage> {
                                     ],
                                   ),
                                 ),
+                                 InkWell(
+                                    onTap: () {
+                                      _showConfirmDelete(songs[index]);
+                                    },
+                                    child: Container(
+                                      width: 40,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        color: SharedConstant.softPurplerApp,
+                                      ),
+                                      child: Icon(
+                                        Icons.favorite,
+                                        color: SharedConstant.purpleApp,
+                                      ),
+                                    ),
+                                  ),
+                                
                               ],
                             ),
                           ),
@@ -117,4 +139,39 @@ class _PlaylistPageState extends State<PlaylistPage> {
       );
     });
   }
+
+  Future<void> _showConfirmDelete(ItuneEntity entity) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // user must tap button!
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Hey!'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Text('Are you sure want to delete this song from playlist ?', style: GoogleFonts.poppins(fontWeight: FontWeight.w300),),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Approve', style: GoogleFonts.poppins(color: SharedConstant.softRed),),
+            onPressed: () {
+              Navigator.of(context).pop();
+              context.read<PlaylistModel>().deleteSingleSong(entity.trackId!);
+            },
+          ),
+          TextButton(
+            child: Text('Cancel', style: GoogleFonts.poppins(color: SharedConstant.purpleApp, fontWeight: FontWeight.w600),),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
 }

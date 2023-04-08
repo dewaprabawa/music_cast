@@ -80,6 +80,19 @@ class PlaylistModel extends ChangeNotifier {
     notifyListeners();
   }
 
+   // delete the value of selected song.
+  void deleteSingleSong(int id) async {
+      debugPrint("---_deleteFromPlaylistUseCase---");
+      await _deleteFromPlaylistUseCase.call(id.toString()).then((either){
+        either.fold((_){
+            debugPrint("---Failure in delete playlist song---");
+        }, (r){
+          this._playlists.removeWhere((element) => element.trackId == id);
+        });
+      });
+    notifyListeners();
+  }
+
   // Sets the state of the playlist model.
   void _setState(
       {PlaylistStatus seStatus = PlaylistStatus.Initial,
