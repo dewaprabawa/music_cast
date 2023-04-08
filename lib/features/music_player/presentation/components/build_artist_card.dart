@@ -20,11 +20,12 @@ class BuildArtistCard extends StatelessWidget {
   Widget build(BuildContext context) {
     if (artistName == "My Playlist") {
       return InkWell(
+        key: Key(SharedConstant.musicShowPlaylistButtonKey),
         onTap: onTapMyPlaylist,
         child: ValueListenableBuilder(
             valueListenable: Hive.box(HiveBoxName.playlist).listenable(),
             builder: (context, Box box, _) {
-              return Stack(
+              return Stack(   
                 children: [
                   Container(
                     width: 100,

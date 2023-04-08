@@ -19,6 +19,7 @@ class BottomAudioPlayer extends StatelessWidget {
         return const SizedBox.shrink();
       }
       return Container(
+        key: Key(SharedConstant.bottomMusicPlayerWidget),
         padding: const EdgeInsets.fromLTRB(15, 5, 10, 10),
         height: MediaQuery.of(context).size.height * 0.18,
         decoration:
@@ -120,6 +121,8 @@ class BottomAudioPlayer extends StatelessWidget {
         }),
         Consumer<PlaylistModel>(builder: (context, model, _) {
           return IconButton(
+            // tooltip: SharedConstant.musicLikeButtonKey,
+              key: Key(SharedConstant.musicLikeButtonKey),
               onPressed: () {
                 context
                     .read<PlaylistModel>()
