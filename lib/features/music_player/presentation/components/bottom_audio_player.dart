@@ -21,7 +21,8 @@ class BottomAudioPlayer extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.fromLTRB(15, 5, 10, 10),
         height: MediaQuery.of(context).size.height * 0.18,
-        decoration: BoxDecoration(color: SharedConstant.nativeWhite, boxShadow: [
+        decoration:
+            BoxDecoration(color: SharedConstant.nativeWhite, boxShadow: [
           BoxShadow(
               color: Colors.grey.shade300,
               offset: const Offset(0, -1),
@@ -104,12 +105,19 @@ class BottomAudioPlayer extends StatelessWidget {
             ),
           ],
         ),
-        IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.repeat,
-              color: SharedConstant.nativeGrey,
-            )),
+        BlocBuilder<MusicPlayerCubit, MusicPlayerState>(
+            builder: (context, state) {
+          return IconButton(
+              onPressed: () {
+                context.read<MusicPlayerCubit>().setRepeatMode(!state.isRepeated);
+              },
+              icon: Icon(
+                state.isRepeated ? Icons.repeat_one : Icons.repeat,
+                color: state.isRepeated
+                    ? SharedConstant.purpleApp
+                    : SharedConstant.nativeGrey,
+              ));
+        }),
         Consumer<PlaylistModel>(builder: (context, model, _) {
           return IconButton(
               onPressed: () {

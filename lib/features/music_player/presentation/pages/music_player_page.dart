@@ -9,6 +9,7 @@ import 'package:music_cast/features/music_player/presentation/components/search_
 import 'package:music_cast/features/music_player/presentation/components/song_list_view.dart';
 import 'package:music_cast/features/music_player/presentation/music_player_cubit/music_player_cubit.dart';
 import 'package:music_cast/features/music_player/presentation/song_data_cubit/song_data_cubit.dart';
+import 'package:music_cast/features/music_playlist/presentation/pages/play_list_page.dart';
 import 'package:music_cast/features/music_playlist/presentation/providers/playlist_model.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -65,11 +66,15 @@ class _MusicPlayerPageState extends State<MusicPlayerPage>
       listeners: [
         BlocListener<SongDataCubit, SongDataState>(
           listener: (context, state) {
+            // conditional statement that checks if the stateStatus property of the state object is set to success
             if (state.stateStatus == StateStatus.success) {
+              // uses the context object to read the MusicPlayerCubit instance
               context
                   .read<MusicPlayerCubit>()
                   .setSongsToMusicPlayer(state.data.results);
+                  // calls the setSongsToMusicPlayer method of the MusicPlayerCubit instance and passes in the results property of the data object of the state
               context.read<MusicPlayerCubit>().setIsShowMusicPlayer(false);
+              // calls the setIsShowMusicPlayer method of the MusicPlayerCubit instance and passes in the value false
             }
           },
         ),
@@ -94,7 +99,14 @@ class _MusicPlayerPageState extends State<MusicPlayerPage>
               const SizedBox(
                 height: 30,
               ),
-              SearchTextField(searchSongController: searchSongController),
+              SearchTextField(
+                hintText: "Artist, Songs, Trailer ....",
+                searchSongController: searchSongController,
+                onChanged: (value) {
+                  context.read<SongDataCubit>().getSongsByName(value);
+                  context.read<MusicPlayerCubit>().setIsShowMusicPlayer(false);
+                },
+              ),
               const HeaderTitle(
                 icon: Icons.star,
                 leadingText: 'Popular artist',
@@ -108,6 +120,21 @@ class _MusicPlayerPageState extends State<MusicPlayerPage>
                     children: List.generate(
                         SharedConstant.popularArtist.length,
                         (index) => BuildArtistCard(
+                            onTapPopularArtist: () async {
+                              context.read<SongDataCubit>().getSongsByName(
+                                  SharedConstant.popularArtist[index]);
+                              context
+                                  .read<MusicPlayerCubit>()
+                                  .setIsShowMusicPlayer(false);
+                            },
+                            onTapMyPlaylist: () async {
+                              await context
+                                  .read<PlaylistModel>()
+                                  .startFetchPlaylist()
+                                  .whenComplete(() {
+                                _showBottomSheet(context);
+                              });
+                            },
                             artistName: SharedConstant.popularArtist[index],
                             index: index)),
                   ),
@@ -161,6 +188,15 @@ class _MusicPlayerPageState extends State<MusicPlayerPage>
           ),
         ),
       ),
+    );
+  }
+
+  void _showBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return const PlaylistPage();
+      },
     );
   }
 }

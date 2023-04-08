@@ -48,6 +48,11 @@ class MusicPlayerCubit extends Cubit<MusicPlayerState> {
     emit(state.copyWith(songs: songs));
   }
 
+  // Sets the list of songs to the music player.
+  void setRepeatMode(bool isRepeated) {
+    emit(state.copyWith(isRepeated: isRepeated));
+  }
+
   // Plays the selected song.
   Future<void> playMusic({int? playIndex, ItuneEntity? currentSong}) async {
     try {
@@ -114,16 +119,24 @@ class MusicPlayerCubit extends Cubit<MusicPlayerState> {
     });
 
     _positionSubscription = _audioPlayer.onPositionChanged.listen((position) {
+      // print("--seconds--${position.inSeconds}");
       emit(state.copyWith(
           value: _toSecondsDouble(position),
           positionText: _toSecondsString(position)));
     });
 
-    _onCompletionSubscription = _audioPlayer.onPlayerComplete.listen((event) async {
+    _onCompletionSubscription =
+        _audioPlayer.onPlayerComplete.listen((event) async {
+      if (state.isRepeated) {
+        playMusic(
+            playIndex: state.selectedIndexMusic,
+            currentSong: state.selectedSong);
+        return;
+      }
+
       // When the player has finished playing a song, determine the index of the current song
       int currentPlayIndex = state.selectedIndexMusic;
       if (currentPlayIndex < state.songs.length - 1) {
-
         _indexIsChangingCount += 1;
 
         // If there are more songs in the playlist, play the next song
@@ -131,8 +144,8 @@ class MusicPlayerCubit extends Cubit<MusicPlayerState> {
         playMusic(
             playIndex: currentPlayIndex,
             currentSong: state.songs[currentPlayIndex]);
-       await Future.delayed(const Duration(milliseconds: 1000));
-        _indexIsChangingCount -= 1;     
+        await Future.delayed(const Duration(milliseconds: 1000));
+        _indexIsChangingCount -= 1;
       } else {
         _indexIsChangingCount += 1;
         // If the last song in the playlist has been played, start playing from the beginning
@@ -141,7 +154,7 @@ class MusicPlayerCubit extends Cubit<MusicPlayerState> {
             playIndex: currentPlayIndex,
             currentSong: state.songs[currentPlayIndex]);
         await Future.delayed(const Duration(milliseconds: 1000));
-         _indexIsChangingCount -= 1;        
+        _indexIsChangingCount -= 1;
       }
       // emit(state.copyWith(positionText: "0", status: PlayerStatus.stop));
     });

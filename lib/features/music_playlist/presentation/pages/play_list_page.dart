@@ -20,7 +20,8 @@ class _PlaylistPageState extends State<PlaylistPage> {
       var songs = model.playlists;
       return Column(
         children: [
-          HeaderTitle(
+          const SizedBox(height: 10,),
+          const HeaderTitle(
               icon: Icons.star,
               leadingText: "Playlist",
               trailingText: "see all"),

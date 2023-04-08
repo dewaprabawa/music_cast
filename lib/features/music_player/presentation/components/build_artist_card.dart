@@ -6,27 +6,21 @@ import 'package:music_cast/commons/box_name/hive_box_name.dart';
 import 'package:music_cast/commons/constants/constants.dart';
 import 'package:music_cast/features/music_player/presentation/song_data_cubit/song_data_cubit.dart';
 import 'package:music_cast/features/music_player/presentation/music_player_cubit/music_player_cubit.dart';
-import 'package:music_cast/features/music_playlist/presentation/pages/play_list_page.dart';
-import 'package:music_cast/features/music_playlist/presentation/providers/playlist_model.dart';
 
 class BuildArtistCard extends StatelessWidget {
   const BuildArtistCard(
-      {Key? key, required this.artistName, required this.index})
+      {Key? key, required this.artistName, required this.index, required this.onTapMyPlaylist, required this.onTapPopularArtist})
       : super(key: key);
   final String artistName;
   final int index;
+  final Function()? onTapMyPlaylist;
+  final Function()? onTapPopularArtist;
 
   @override
   Widget build(BuildContext context) {
     if (artistName == "My Playlist") {
       return InkWell(
-        onTap: () async {
-          await context.read<PlaylistModel>()
-          .startFetchPlaylist()
-          .whenComplete((){
-            _showBottomSheet(context);
-          });
-        },
+        onTap: onTapMyPlaylist,
         child: ValueListenableBuilder(
             valueListenable: Hive.box(HiveBoxName.playlist).listenable(),
             builder: (context, Box box, _) {
@@ -74,10 +68,7 @@ class BuildArtistCard extends StatelessWidget {
       );
     } else {
       return InkWell(
-        onTap: () {
-          context.read<SongDataCubit>().getSongsByName(artistName);
-          context.read<MusicPlayerCubit>().setIsShowMusicPlayer(false);
-        },
+        onTap: onTapPopularArtist,
         child: Container(
           margin: EdgeInsets.only(right: index == 4 ? 10 : 10),
           decoration: BoxDecoration(
@@ -100,12 +91,5 @@ class BuildArtistCard extends StatelessWidget {
     }
   }
 
-  void _showBottomSheet(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    builder: (BuildContext context) {
-      return const PlaylistPage();
-    },
-  );
-}
+
 }

@@ -62,5 +62,7 @@ class MusicPlayerState extends Equatable {
         selectedIndexMusic,
         selectedSong,
         isRepeated,
+        max,
+        value
       ];
 }

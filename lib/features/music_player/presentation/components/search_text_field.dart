@@ -5,9 +5,11 @@ import 'package:music_cast/features/music_player/presentation/song_data_cubit/so
 import 'package:music_cast/features/music_player/presentation/music_player_cubit/music_player_cubit.dart';
 
 class SearchTextField extends StatelessWidget {
-  const SearchTextField({Key? key, required this.searchSongController})
+  const SearchTextField({Key? key, required this.searchSongController, required this.onChanged, required this.hintText})
       : super(key: key);
   final TextEditingController searchSongController;
+  final void Function(String)? onChanged;
+  final String hintText; 
 
   @override
   Widget build(BuildContext context) {
@@ -16,12 +18,9 @@ class SearchTextField extends StatelessWidget {
           const EdgeInsets.only(left: 20, right: 10, bottom: 0.8, top: 0.8),
       child: TextFormField(
         controller: searchSongController,
-        onChanged: (value) {
-          context.read<SongDataCubit>().getSongsByName(value);
-          context.read<MusicPlayerCubit>().setIsShowMusicPlayer(false);
-        },
+        onChanged: onChanged,
         decoration: InputDecoration(
-            hintText: "Artist, Songs, Trailer ....",
+            hintText: hintText,
             prefixIcon: IconButton(
               icon: const Icon(
                 Icons.search,
