@@ -21,7 +21,7 @@ class BottomAudioPlayer extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.fromLTRB(15, 5, 10, 10),
         height: MediaQuery.of(context).size.height * 0.18,
-        decoration: BoxDecoration(color: Colors.white, boxShadow: [
+        decoration: BoxDecoration(color: SharedConstant.nativeWhite, boxShadow: [
           BoxShadow(
               color: Colors.grey.shade300,
               offset: const Offset(0, -1),
@@ -154,7 +154,7 @@ class BottomAudioPlayer extends StatelessWidget {
                   ? Icons.pause_circle
                   : Icons.play_circle,
               size: 50,
-              color: Colors.white,
+              color: SharedConstant.nativeWhite,
             ),
             onPressed: () {
               context.read<MusicPlayerCubit>().setTogglePlay();

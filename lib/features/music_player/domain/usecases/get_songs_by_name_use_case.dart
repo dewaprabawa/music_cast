@@ -5,10 +5,10 @@ import 'package:music_cast/features/music_player/domain/entities/itunes_entity.d
 import 'package:music_cast/features/music_player/domain/repository/itunes_repository.dart';
 
 class GetSongByNameUseCase implements UseCase<ItuneEntities, String> {
-  final ItunesRepository itunesRepository;
-  GetSongByNameUseCase(this.itunesRepository);
+  final ItunesRepository _itunesRepository;
+  GetSongByNameUseCase(this._itunesRepository);
   @override
   Future<Either<Failure, ItuneEntities>> call(String params) async {
-    return await itunesRepository.getSongsByName(params);
+    return await _itunesRepository.getSongsByName(params);
   }
 }

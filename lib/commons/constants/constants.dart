@@ -18,5 +18,6 @@ class SharedConstant {
    static Color greyShade = Colors.grey.shade200;
    static Color blueGray = Colors.blueGrey;
    static Color nativeGrey = Colors.grey;
+   static Color nativeWhite = Colors.white;
    static Color softPurplerApp = Color.fromARGB(255, 211, 203, 255);
 }

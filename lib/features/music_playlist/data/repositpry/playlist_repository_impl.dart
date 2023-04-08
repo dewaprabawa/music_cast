@@ -10,14 +10,14 @@ import 'package:music_cast/features/music_playlist/domain/repository/playlist_re
 const key = "playlist";
 
 class PlaylistRepositoryImpl extends PlaylistRepository {
-  final LocalePlaylistDataSource localeDataSource;
+  final LocalePlaylistDataSource _localeDataSource;
 
-  PlaylistRepositoryImpl(this.localeDataSource);
+  PlaylistRepositoryImpl(this._localeDataSource);
 
   @override
   Future<Either<Failure, bool>> put(ItuneEntity entity) async {
     try {
-      final isSaved = await localeDataSource.save(
+      final isSaved = await _localeDataSource.save(
           entity.toJson(), entity.trackId.toString());
       return right(isSaved);
     } on CacheException catch (_) {
@@ -28,7 +28,7 @@ class PlaylistRepositoryImpl extends PlaylistRepository {
   @override
   Future<Either<Failure, bool>> hasContained(String id) async {
     try {
-      final data = localeDataSource.loadList();
+      final data = _localeDataSource.loadList();
       if (data != null) {
         bool isSame = data.results
             .any((element) => element.trackId.toString() == id);
@@ -43,7 +43,7 @@ class PlaylistRepositoryImpl extends PlaylistRepository {
   @override
   Future<Either<Failure, List<ItuneEntity>>> get() async {
     try {
-      final data = localeDataSource.loadList();
+      final data = _localeDataSource.loadList();
       if (data != null) {
         return right(Mapper.toDomain(data).results);
       }
@@ -56,7 +56,7 @@ class PlaylistRepositoryImpl extends PlaylistRepository {
   @override
   Future<Either<Failure, bool>> delete(String id) async {
     try {
-      final isSaved = await localeDataSource.delete(id);
+      final isSaved = await _localeDataSource.delete(id);
       return right(isSaved);
     } catch (e) {
       return left(LocalServiceFailure());

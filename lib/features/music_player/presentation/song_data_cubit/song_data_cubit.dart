@@ -16,7 +16,7 @@ class SongDataCubit extends Cubit<SongDataState> {
   Future<void> getSongs() async {
     emit(const SongDataState.loading());
     await getSongUseCase.call(ParamLimit(limit: 20)).then((value) {
-      value.fold((l) {
+      value.fold((_) {
         emit(const SongDataState.failure("The song is not found"));
       }, (r) {
         _sortMusicOrder(r);

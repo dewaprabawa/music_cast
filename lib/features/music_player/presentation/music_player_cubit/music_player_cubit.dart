@@ -1,13 +1,8 @@
 import 'dart:async';
-import 'dart:ffi';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:music_cast/commons/usecase/usecase.dart';
 import 'package:music_cast/features/music_player/domain/entities/itunes_entity.dart';
-import 'package:music_cast/features/music_player/domain/usecases/get_songs_by_name_use_case.dart';
-import 'package:music_cast/features/music_player/domain/usecases/get_songs_use_case.dart';
 import 'package:audioplayers/audioplayers.dart';
 
 part 'music_player_state.dart';
@@ -19,20 +14,21 @@ class MusicPlayerCubit extends Cubit<MusicPlayerState> {
   late StreamSubscription<Duration> _positionSubscription;
   late StreamSubscription<void> _onCompletionSubscription;
 
+// Initialize the audio player.
   MusicPlayerCubit() : super(const MusicPlayerState()) {
     _audioPlayer = AudioPlayer();
   }
-
+ // Close the audio player.
   @override
   Future<void> close() {
     _disposeAudioPlayer();
     return super.close();
   }
-
+ // Changes the position of the song.
   void onChangePosition(double seconds) {
     // emit(state.copyWith(duration: Duration(seconds: seconds.toInt())));
   }
-
+  // Shows or hides the music player.
   void setIsShowMusicPlayer(bool isShow) {
     if (!isShow) {
       _stopMusic();
@@ -41,11 +37,11 @@ class MusicPlayerCubit extends Cubit<MusicPlayerState> {
       emit(state.copyWith(isShowPlayer: isShow));
     }
   }
-
+ // Sets the list of songs to the music player.
   void setSongsToMusicPlayer(List<ItuneEntity> songs) {
     emit(state.copyWith(songs: songs));
   }
-
+ // Plays the selected song.
   Future<void> playMusic({int? playIndex, ItuneEntity? currentSong}) async {
     try {
       if (currentSong != null) {
@@ -64,7 +60,7 @@ class MusicPlayerCubit extends Cubit<MusicPlayerState> {
       debugPrint(e.toString());
     }
   }
-
+  // Toggles play/pause of the song.
   void setTogglePlay() async {
     switch (state.status) {
       case PlayerStatus.playing:
@@ -78,26 +74,26 @@ class MusicPlayerCubit extends Cubit<MusicPlayerState> {
         break;
     }
   }
-
+  // Resumes the song.
   Future<void> _resumeMusic() async {
     await _audioPlayer.resume();
     emit(state.copyWith(
       status: PlayerStatus.playing,
     ));
   }
-
+// Stops the song.
   Future<void> _stopMusic() async {
     await _audioPlayer.stop();
     emit(state.copyWith(
       status: PlayerStatus.stop,
     ));
   }
-
+ // Pauses the song.
   Future<void> _pauseMusic() async {
     await _audioPlayer.pause();
     emit(state.copyWith(status: PlayerStatus.paused));
   }
-
+ // Starts listening to duration and position of the song.
   void _startListenDurationAndPosition() {
     _durationSubscription = _audioPlayer.onDurationChanged.listen((duration) {
       emit(state.copyWith(

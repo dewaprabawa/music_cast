@@ -13,14 +13,14 @@ abstract class LocaleSongDataSource {
 }
 
 class HiveSongDataSourceImpl implements LocaleSongDataSource {
-  final Box hive;
+  final Box _hive;
 
-  HiveSongDataSourceImpl(this.hive);
+  HiveSongDataSourceImpl(this._hive);
 
   @override
   ItunesModel? loadList(String key) {
     try {
-      List<dynamic> response = hive.get(key);
+      List<dynamic> response = _hive.get(key);
         List<Map<String, dynamic>> data =
             response.map((e) => Map<String, dynamic>.from(e)).toList();
         if (data.isNotEmpty) {
@@ -37,7 +37,7 @@ class HiveSongDataSourceImpl implements LocaleSongDataSource {
   @override
   Future<bool> save(dynamic response, String key) async {
     try {
-      await hive.put(key, response).whenComplete(() => true);
+      await _hive.put(key, response).whenComplete(() => true);
     } catch (e) {
       debugPrint(e.toString() + ' save function hive');
       throw CacheException();

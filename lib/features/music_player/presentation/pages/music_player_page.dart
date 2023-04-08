@@ -72,7 +72,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage>
       },
       child: Scaffold(
         bottomNavigationBar: const BottomAudioPlayer(),
-        backgroundColor: Colors.white,
+        backgroundColor: SharedConstant.nativeWhite,
         body: SafeArea(
           child: Column(
             children: [
@@ -186,7 +186,7 @@ class _LoadingCircularProgressIndicator extends StatelessWidget {
                         Container(
                           width: 110,
                           height: 100,
-                          color: Colors.white,
+                          color: SharedConstant.nativeWhite,
                         ),
                         const Padding(
                           padding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -198,7 +198,7 @@ class _LoadingCircularProgressIndicator extends StatelessWidget {
                               Container(
                                 width: double.infinity,
                                 height: 8.0,
-                                color: Colors.white,
+                                color: SharedConstant.nativeWhite,
                               ),
                               const Padding(
                                 padding: EdgeInsets.symmetric(vertical: 2.0),
@@ -206,7 +206,7 @@ class _LoadingCircularProgressIndicator extends StatelessWidget {
                               Container(
                                 width: double.infinity,
                                 height: 8.0,
-                                color: Colors.white,
+                                color: SharedConstant.nativeWhite,
                               ),
                               const Padding(
                                 padding: EdgeInsets.symmetric(vertical: 2.0),
@@ -214,7 +214,7 @@ class _LoadingCircularProgressIndicator extends StatelessWidget {
                               Container(
                                 width: 40.0,
                                 height: 8.0,
-                                color: Colors.white,
+                                color: SharedConstant.nativeWhite,
                               ),
                             ],
                           ),

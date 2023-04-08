@@ -88,7 +88,7 @@ class SongListView extends StatelessWidget {
                                               icon: Icon(
                                                 iconData,
                                                 size: 50,
-                                                color: Colors.white,
+                                                color: SharedConstant.nativeWhite,
                                               ),
                                               onPressed: () {
                                                 context

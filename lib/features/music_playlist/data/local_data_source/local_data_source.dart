@@ -13,14 +13,14 @@ abstract class LocalePlaylistDataSource {
 }
 
 class HivePlaylistDataSourceImpl implements LocalePlaylistDataSource {
-  final Box hive;
+  final Box _hive;
 
-  HivePlaylistDataSourceImpl(this.hive);
+  HivePlaylistDataSourceImpl(this._hive);
 
   @override
   Future<bool> delete(String key) async {
     try {
-     await hive.delete(key).then((_) => true);
+     await _hive.delete(key).then((_) => true);
     } catch (e) {
        debugPrint(e.toString() + ' delete function hive');
       throw CacheException();
@@ -31,8 +31,8 @@ class HivePlaylistDataSourceImpl implements LocalePlaylistDataSource {
   @override
   ItunesModel? loadList() {
     try {
-      if (hive.values.isEmpty) return null;
-      List<Map<String, dynamic>> playlist = hive.values
+      if (_hive.values.isEmpty) return null;
+      List<Map<String, dynamic>> playlist = _hive.values
           .map((element) => Map<String, dynamic>.from(element))
           .toList();
       List<ItuneModel> savedOnes = playlist.map((data)
@@ -48,7 +48,7 @@ class HivePlaylistDataSourceImpl implements LocalePlaylistDataSource {
   @override
   Future<bool> save(response, String key) async {
     try {
-      await hive.put(key, response).then((_) => true);
+      await _hive.put(key, response).then((_) => true);
     } catch (e) {
       debugPrint(e.toString() + ' save function hive');
       throw CacheException();

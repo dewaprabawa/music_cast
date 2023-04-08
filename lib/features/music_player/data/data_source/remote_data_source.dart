@@ -13,9 +13,9 @@ abstract class RemoteDataSource {
 }
 
 class RemoteDataServiceImpl implements RemoteDataSource {
-  final http.Client client;
+  final http.Client _client;
 
-  RemoteDataServiceImpl(this.client);
+  RemoteDataServiceImpl(this._client);
 
   @override
   Future<ItunesModel> getSongsByName(String name) async {
@@ -23,7 +23,7 @@ class RemoteDataServiceImpl implements RemoteDataSource {
         Uri.parse("https://itunes.apple.com/search?term=$name&limit=10");
     debugPrint(url.toString());
     try {
-      http.Response response = await client.get(url, headers: {
+      http.Response response = await _client.get(url, headers: {
         'Content-Type': 'application/json',
       });
       debugPrint(response.statusCode.toString());
@@ -39,11 +39,11 @@ class RemoteDataServiceImpl implements RemoteDataSource {
   Future<ItunesModel> getSongs({int limit = 20}) async {
     final Uri url = Uri.parse(SharedConstant.baseURL+"&limit=$limit");
     try {
-      http.Response response = await client.get(url, headers: {
+      http.Response response = await _client.get(url, headers: {
         'Content-Type': 'application/json',
       });
-      // debugPrint(response.statusCode.toString());
-      // log(response.body.toString());
+      debugPrint(response.statusCode.toString());
+      log(response.body.toString());
       dynamic decodedResult = jsonDecode(response.body);
       return ItunesModel.fromJson(decodedResult);
     } catch (_) {
