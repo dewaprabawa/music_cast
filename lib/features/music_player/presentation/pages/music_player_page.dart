@@ -61,22 +61,39 @@ class _MusicPlayerPageState extends State<MusicPlayerPage>
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SongDataCubit, SongDataState>(
-      listener: (context, state) {
-        if (state.stateStatus == StateStatus.success) {
-          context
-              .read<MusicPlayerCubit>()
-              .setSongsToMusicPlayer(state.data.results);
-          context.read<MusicPlayerCubit>().setIsShowMusicPlayer(false);
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<SongDataCubit, SongDataState>(
+          listener: (context, state) {
+            if (state.stateStatus == StateStatus.success) {
+              context
+                  .read<MusicPlayerCubit>()
+                  .setSongsToMusicPlayer(state.data.results);
+              context.read<MusicPlayerCubit>().setIsShowMusicPlayer(false);
+            }
+          },
+        ),
+        BlocListener<MusicPlayerCubit, MusicPlayerState>(
+          listener: (context, state) {
+            if (state.selectedSong != null) {
+              if (context.read<MusicPlayerCubit>().indexIsChanging) {
+                context
+                    .read<PlaylistModel>()
+                    .startCheckIsSaveInPlaylist(state.selectedSong!);
+              }
+            }
+          },
+        ),
+      ],
       child: Scaffold(
         bottomNavigationBar: const BottomAudioPlayer(),
         backgroundColor: SharedConstant.nativeWhite,
         body: SafeArea(
           child: Column(
             children: [
-              SizedBox(height: 30,),
+              const SizedBox(
+                height: 30,
+              ),
               SearchTextField(searchSongController: searchSongController),
               const HeaderTitle(
                 icon: Icons.star,
@@ -114,10 +131,15 @@ class _MusicPlayerPageState extends State<MusicPlayerPage>
                                     .selectedIndexMusic ==
                                 playIndex) {
                           context.read<MusicPlayerCubit>().setTogglePlay();
+                          // If the music player is currently playing the selected song,
+                          // toggle the play/pause state
                         } else {
+                          // If the music player is not playing the selected song,
+                          // start playing the selected song using the `playMusic` function
                           context.read<MusicPlayerCubit>().playMusic(
                               currentSong: selectedSong, playIndex: playIndex);
                         }
+                        // After playing the song, check if it is already saved in the playlist
                         context
                             .read<PlaylistModel>()
                             .startCheckIsSaveInPlaylist(selectedSong);
@@ -173,58 +195,58 @@ class _LoadingCircularProgressIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-              child: Shimmer.fromColors(
-                baseColor: Colors.grey.shade300,
-                highlightColor: Colors.grey.shade100,
-                child: ListView.builder(
-                  padding: const EdgeInsets.only(left: 20, right: 20, bottom: 15),
-                  itemBuilder: (_, __) => Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          width: 110,
-                          height: 100,
-                          color: SharedConstant.nativeWhite,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8.0),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Container(
-                                width: double.infinity,
-                                height: 8.0,
-                                color: SharedConstant.nativeWhite,
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 2.0),
-                              ),
-                              Container(
-                                width: double.infinity,
-                                height: 8.0,
-                                color: SharedConstant.nativeWhite,
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 2.0),
-                              ),
-                              Container(
-                                width: 40.0,
-                                height: 8.0,
-                                color: SharedConstant.nativeWhite,
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  itemCount: 6,
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: ListView.builder(
+          padding: const EdgeInsets.only(left: 20, right: 20, bottom: 15),
+          itemBuilder: (_, __) => Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  width: 110,
+                  height: 100,
+                  color: SharedConstant.nativeWhite,
                 ),
-              ),
-            );
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        width: double.infinity,
+                        height: 8.0,
+                        color: SharedConstant.nativeWhite,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 2.0),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        height: 8.0,
+                        color: SharedConstant.nativeWhite,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 2.0),
+                      ),
+                      Container(
+                        width: 40.0,
+                        height: 8.0,
+                        color: SharedConstant.nativeWhite,
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+          itemCount: 6,
+        ),
+      ),
+    );
   }
 }

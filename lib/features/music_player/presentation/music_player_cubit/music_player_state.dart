@@ -8,10 +8,11 @@ class MusicPlayerState extends Equatable {
     this.status = PlayerStatus.stop,
     this.selectedIndexMusic = -1,
     this.selectedSong,
-    this.durationText = "",
-    this.positionText = "",
+    this.durationText = "0:00:00",
+    this.positionText = "0:00:00",
     this.max = 0.0,
     this.value = 0.0,
+    this.isRepeated = false,
     this.songs = const [],
   });
 
@@ -24,9 +25,11 @@ class MusicPlayerState extends Equatable {
   final String positionText;
   final double max;
   final double value;
+  final bool isRepeated;
 
   MusicPlayerState copyWith({
     bool? isShowPlayer,
+    bool? isRepeated,
     PlayerStatus? status,
     int? selectedPlayIndex,
     ItuneEntity? selectedSong,
@@ -37,6 +40,7 @@ class MusicPlayerState extends Equatable {
     double? max,
   }) {
     return MusicPlayerState(
+       isRepeated: isRepeated ?? this.isRepeated,
         isShowMusicPlayer: isShowPlayer ?? this.isShowMusicPlayer,
         status: status ?? this.status,
         selectedIndexMusic: selectedPlayIndex ?? this.selectedIndexMusic,
@@ -56,6 +60,7 @@ class MusicPlayerState extends Equatable {
         status,
         songs,
         selectedIndexMusic,
-        selectedSong
+        selectedSong,
+        isRepeated,
       ];
 }
