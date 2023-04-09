@@ -9,7 +9,11 @@ import 'package:music_cast/features/music_player/presentation/music_player_cubit
 
 class BuildArtistCard extends StatelessWidget {
   const BuildArtistCard(
-      {Key? key, required this.artistName, required this.index, required this.onTapMyPlaylist, required this.onTapPopularArtist})
+      {Key? key, 
+      required this.artistName,
+       required this.index, 
+       required this.onTapMyPlaylist, 
+       required this.onTapPopularArtist})
       : super(key: key);
   final String artistName;
   final int index;

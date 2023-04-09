@@ -72,7 +72,8 @@ class _MusicPlayerPageState extends State<MusicPlayerPage>
               context
                   .read<MusicPlayerCubit>()
                   .setSongsToMusicPlayer(state.data.results);
-                  // calls the setSongsToMusicPlayer method of the MusicPlayerCubit instance and passes in the results property of the data object of the state
+                  // calls the setSongsToMusicPlayer method of the MusicPlayerCubit instance 
+                  //and passes in the results property of the data object of the state
               context.read<MusicPlayerCubit>().setIsShowMusicPlayer(false);
               // calls the setIsShowMusicPlayer method of the MusicPlayerCubit instance and passes in the value false
             }

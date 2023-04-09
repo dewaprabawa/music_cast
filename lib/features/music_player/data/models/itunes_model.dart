@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:equatable/equatable.dart';
 import 'package:music_cast/features/music_player/domain/entities/itunes_entity.dart';
 
 class Mapper {
@@ -16,7 +17,7 @@ class Mapper {
   }
 }
 
-class ItunesModel {
+class ItunesModel extends Equatable {
   final List<ItuneModel> results;
 
   const ItunesModel({
@@ -31,26 +32,30 @@ class ItunesModel {
   static const empty = ItunesModel(results: []);
 
   int get count => results.length;
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [results];
 }
 
 class ItuneModel extends ItuneEntity {
   ItuneModel({
-    required int? artistId,
-    required int? collectionId,
-    required int? trackId,
-    required String? artistName,
-    required String? collectionName,
-    required String? trackName,
-    required String? artistViewUrl,
-    required String? collectionViewUrl,
-    required String? trackViewUrl,
-    required String? previewUrl,
-    required String? artworkUrl30,
-    required String? artworkUrl60,
-    required String? artworkUrl100,
-    required String? primaryGenreName,
-    required String? shortDescription,
-    required String? longDescription,
+     int? artistId,
+     int? collectionId,
+     int? trackId,
+     String? artistName,
+     String? collectionName,
+     String? trackName,
+     String? artistViewUrl,
+     String? collectionViewUrl,
+     String? trackViewUrl,
+     String? previewUrl,
+     String? artworkUrl30,
+     String? artworkUrl60,
+     String? artworkUrl100,
+     String? primaryGenreName,
+     String? shortDescription,
+     String? longDescription,
   }) : super(
           artistId: artistId,
           collectionId: collectionId,

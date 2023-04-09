@@ -6,5 +6,5 @@ import 'package:music_cast/features/music_player/domain/entities/itunes_entity.d
 
 abstract class ItunesRepository {
   Future<Either<Failure, ItuneEntities>> getSongs();
-  Future<Either<Failure, ItuneEntities>> getSongsByName(String query);
+  Future<Either<Failure, ItuneEntities?>> getSongsByName(String query);
 }

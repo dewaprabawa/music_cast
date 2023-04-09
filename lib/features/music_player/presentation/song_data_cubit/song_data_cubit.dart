@@ -31,9 +31,11 @@ class SongDataCubit extends Cubit<SongDataState> {
       value.fold((_) {
         emit(const SongDataState.failure("The song is not found"));
       }, (success) {
-        if (success.results.isEmpty) {
+        if (success == null) {
           emit(const SongDataState.empty());
-        } else {
+        } else if (success.results.isEmpty) { 
+           emit(const SongDataState.empty());
+        }else {
           emit(SongDataState.success(success));
         }
       });
