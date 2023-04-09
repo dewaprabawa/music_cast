@@ -19,6 +19,7 @@ This app is a music player app that allows users to play and manage their music 
 -   Browse and play music from the device
 -   Create and manage playlists
 -   Equalizer settings
+-   Local Storage when no connection
 
 
 List of Libraries/Dependencies and their Functionalities
