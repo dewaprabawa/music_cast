@@ -1,6 +1,9 @@
+// ignore_for_file: avoid_print
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:music_cast/commons/box_name/hive_box_name.dart';
 import 'package:music_cast/commons/errors/errors.dart';
 import 'package:music_cast/commons/errors/exceptions.dart';
 import 'package:music_cast/commons/internet_checker/network_checker.dart';
@@ -111,12 +114,12 @@ void main() {
     test('should return cached data when device is offline', () async {
       // arrange
       when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => false);
-      when(() => mockLocaleDataSource.loadList(key))
+      when(() => mockLocaleDataSource.loadList(HiveBoxName.songs))
           .thenAnswer((_) => tItunesModel);
       // act
       final result = await repository.getSongsByName(tName);
       // assert
-      verify(() => mockLocaleDataSource.loadList(key)).called(1);
+      verify(() => mockLocaleDataSource.loadList(HiveBoxName.songs)).called(1);
       verifyZeroInteractions(mockRemoteDataSource);
       expect(result, equals(Right(tItunesModel)));
     });
@@ -135,7 +138,7 @@ void main() {
       // assert
       verify(() async => await mockRemoteDataSource.getSongsByName(tName)).called(1);
       verify(() async => await  mockLocaleDataSource.save(
-          Mapper.resultListToString(tItunesModel.results), key)).called(1);
+          Mapper.resultListToString(tItunesModel.results), HiveBoxName.songs)).called(1);
       expect(result, equals(Right(tItunesEntity)));
     });
 
@@ -154,11 +157,11 @@ void main() {
     test('should return LocalServiceFailure when local data source throws a CacheException', () async {
       // arrange
       when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => false);
-      when(() => mockLocaleDataSource.loadList(key)).thenThrow(CacheException());
+      when(() => mockLocaleDataSource.loadList(HiveBoxName.songs)).thenThrow(CacheException());
       // act
       final result = await repository.getSongsByName(tName);
       // assert
-      verify(() => mockLocaleDataSource.loadList(key)).called(1);
+      verify(() => mockLocaleDataSource.loadList(HiveBoxName.songs)).called(1);
       verifyZeroInteractions(mockRemoteDataSource);
       expect(result, equals(Left(LocalServiceFailure())));
     });
