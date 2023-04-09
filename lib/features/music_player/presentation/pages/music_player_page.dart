@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:music_cast/commons/constants/constants.dart';
+import 'package:music_cast/commons/internet_checker/internet_connection_helper.dart';
 import 'package:music_cast/features/music_player/presentation/components/bottom_audio_player.dart';
 import 'package:music_cast/features/music_player/presentation/components/build_artist_card.dart';
 import 'package:music_cast/features/music_player/presentation/components/header_title.dart';
@@ -65,18 +66,22 @@ class _MusicPlayerPageState extends State<MusicPlayerPage>
     return MultiBlocListener(
       listeners: [
         BlocListener<SongDataCubit, SongDataState>(
-          listener: (context, state) {
+          listener: (context, state) async {
             // conditional statement that checks if the stateStatus property of the state object is set to success
             if (state.stateStatus == StateStatus.success) {
               // uses the context object to read the MusicPlayerCubit instance
               context
                   .read<MusicPlayerCubit>()
                   .setSongsToMusicPlayer(state.data.results);
-                  // calls the setSongsToMusicPlayer method of the MusicPlayerCubit instance 
-                  //and passes in the results property of the data object of the state
+              // calls the setSongsToMusicPlayer method of the MusicPlayerCubit instance
+              //and passes in the results property of the data object of the state
               context.read<MusicPlayerCubit>().setIsShowMusicPlayer(false);
               // calls the setIsShowMusicPlayer method of the MusicPlayerCubit instance and passes in the value false
-            }
+              if (!await InternetConnectionHelper.hasInternet()) {
+                _showAlertTopScreen(BuildContext, "Your internet is off...");
+              }
+               // check device connection that notify the user
+            } 
           },
         ),
         BlocListener<MusicPlayerCubit, MusicPlayerState>(
@@ -150,7 +155,12 @@ class _MusicPlayerPageState extends State<MusicPlayerPage>
                   case StateStatus.success:
                     return SongListView(
                       songs: state.data.results,
-                      onSelectedSongs: (selectedSong, playIndex) {
+                      onSelectedSongs: (selectedSong, playIndex) async {
+                        if (!await InternetConnectionHelper.hasInternet()) {
+                          return _showAlertTopScreen(
+                              BuildContext, "Your internet is off...");
+                        }
+
                         if (context.read<MusicPlayerCubit>().state.status ==
                                 PlayerStatus.playing &&
                             context
@@ -199,6 +209,15 @@ class _MusicPlayerPageState extends State<MusicPlayerPage>
         return const PlaylistPage();
       },
     );
+  }
+
+  void _showAlertTopScreen(BuildContext, String message) {
+    final snackBar = SnackBar(
+      content: Text(message, style: GoogleFonts.dmMono()),
+      behavior: SnackBarBehavior.floating,
+      margin: EdgeInsets.only(top: 70.0),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
 
