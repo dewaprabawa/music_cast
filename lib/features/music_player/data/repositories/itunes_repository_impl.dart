@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:music_cast/commons/box_name/hive_box_name.dart';
 import 'package:music_cast/commons/errors/errors.dart';
 import 'package:music_cast/commons/errors/exceptions.dart';
 import 'package:music_cast/commons/internet_checker/network_checker.dart';
@@ -9,8 +10,6 @@ import 'package:music_cast/features/music_player/domain/entities/itunes_entity.d
 import 'package:music_cast/features/music_player/domain/repository/itunes_repository.dart';
 
 
-const key = "result";
-const favKey = "favourite";
 
 class ItunesRepositoryImpl implements ItunesRepository {
   final LocaleSongDataSource localeDataSource;
@@ -28,15 +27,15 @@ class ItunesRepositoryImpl implements ItunesRepository {
       try {
         final data = await remoteDataSource.getSongs(limit: limit);
         await localeDataSource.save(
-              data.results.map((e) => e.toJson()).toList(), key);
+            data.results.map((e) => e.toJson()).toList(), HiveBoxName.songs);
         return Right(Mapper.toDomain(data));
       } on ServerException {
         return Left(RemoteServerFailure());
       }
     } else {
       try {
-        final data = localeDataSource.loadList(key);
-        if(data != null){
+        final data = localeDataSource.loadList(HiveBoxName.songs);
+        if (data != null) {
           return Right(Mapper.toDomain(data));
         }
         return const Right(ItuneEntities(results: []));
@@ -47,23 +46,27 @@ class ItunesRepositoryImpl implements ItunesRepository {
   }
 
   @override
-  Future<Either<Failure, ItuneEntities>> getSongsByName(String name) async {
+  Future<Either<Failure, ItuneEntities?>> getSongsByName(String name) async {
     if (await networkInfo.isConnected) {
       try {
         final data = await remoteDataSource.getSongsByName(name);
-         await localeDataSource.save(
-              Mapper.resultListToString(data.results), key);
-         return Right(Mapper.toDomain(data));
+        if (data != null) {
+          await localeDataSource.save(
+              Mapper.resultListToString(data.results), HiveBoxName.songs);
+          return Right(Mapper.toDomain(data));
+        } else {
+          return const Right(null);
+        }
       } on ServerException {
         return Left(RemoteServerFailure());
       }
     } else {
       try {
-          final data = localeDataSource.loadList(key);
-        if(data != null){
+        final data = localeDataSource.loadList(HiveBoxName.songs);
+        if (data != null) {
           return Right(Mapper.toDomain(data));
         }
-         return const Right(ItuneEntities(results: []));
+        return const Right(ItuneEntities(results: []));
       } on CacheException {
         return Left(LocalServiceFailure());
       }

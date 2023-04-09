@@ -9,7 +9,7 @@ import 'package:music_cast/commons/errors/errors.dart';
 
 abstract class RemoteDataSource {
   Future<ItunesModel> getSongs({int limit = 20});
-  Future<ItunesModel> getSongsByName(String name);
+  Future<ItunesModel?> getSongsByName(String name);
 }
 
 class RemoteDataServiceImpl implements RemoteDataSource {

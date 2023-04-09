@@ -44,12 +44,12 @@ void main() {
       when(() => mockHttpClient.get(any(),
           headers:
               any(named: 'headers'))).thenAnswer((_) async => http.Response(
-          '{"resultCount":1,"results":[{"artistId": 1234, "collectionId": 5678, "trackId": 9012, "artistName": "John Doe", "collectionName": "Best Hits","trackName": "Test Song", "artistViewUrl": "https://example.com/artist",  "collectionViewUrl": "https://example.com/collection", "trackViewUrl": "https://example.com/track","previewUrl": "https://example.com/preview","artworkUrl30": "https://example.com/artwork30","artworkUrl60": "https://example.com/artwork60","artworkUrl100": "https://example.com/artwork100", "primaryGenreName": "Pop", "shortDescription": "Short description","longDescription": "Long description"}]}',
+          '{"results":[{"artistId": 1234, "collectionId": 5678, "trackId": 9012, "artistName": "John Doe", "collectionName": "Best Hits","trackName": "Test Song", "artistViewUrl": "https://example.com/artist",  "collectionViewUrl": "https://example.com/collection", "trackViewUrl": "https://example.com/track","previewUrl": "https://example.com/preview","artworkUrl30": "https://example.com/artwork30","artworkUrl60": "https://example.com/artwork60","artworkUrl100": "https://example.com/artwork100", "primaryGenreName": "Pop", "shortDescription": "Short description","longDescription": "Long description"}]}',
           200));
 
       // act
       final result = await remoteDataSource.getSongs();
-
+    
   
       // assert
       expect(result, tItunesModel);
