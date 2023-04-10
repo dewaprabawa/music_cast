@@ -12,7 +12,6 @@ import 'package:music_cast/features/music_player/presentation/music_player_cubit
 import 'package:music_cast/features/music_player/presentation/song_data_cubit/song_data_cubit.dart';
 import 'package:music_cast/features/music_playlist/presentation/pages/play_list_page.dart';
 import 'package:music_cast/features/music_playlist/presentation/providers/playlist_model.dart';
-import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 class MusicPlayerPage extends StatefulWidget {

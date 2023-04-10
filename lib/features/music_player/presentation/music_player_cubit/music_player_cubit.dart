@@ -53,13 +53,42 @@ class MusicPlayerCubit extends Cubit<MusicPlayerState> {
     emit(state.copyWith(isRepeated: isRepeated));
   }
 
+  //play next selected song to the music player.
+  void playNext() async {
+    if (state.songs.isNotEmpty) {
+      int prevIndex = 0;
+      if (state.selectedIndexMusic < state.songs.length - 1) {
+        prevIndex = state.selectedIndexMusic;
+        state.copyWith(selectedPlayIndex: prevIndex++);
+      }
+      playMusic(playIndex: prevIndex, currentSong: state.songs[prevIndex]);
+    }
+  }
+
+  //play previous selected song to the music player.
+  void playPrevius() {
+    if (state.songs.isNotEmpty) {
+      int prevIndex = 0;
+      if (state.selectedIndexMusic <= 0) {
+        prevIndex = state.songs.length - 1;
+      } else {
+        prevIndex = state.selectedIndexMusic - 1;
+      }
+      playMusic(playIndex: prevIndex, currentSong: state.songs[prevIndex]);
+    }
+  }
+
+  Future<void> _setPathURLsong(String? url) async {
+    await _audioPlayer.play(UrlSource(url ?? ""));
+  }
+
   // Plays the selected song.
   Future<void> playMusic({int? playIndex, ItuneEntity? currentSong}) async {
     try {
       if (currentSong != null) {
         _startListenDurationAndPosition();
 
-        await _audioPlayer.play(UrlSource(currentSong.previewUrl!));
+        await _setPathURLsong(currentSong.previewUrl);
 
         emit(state.copyWith(
             isShowPlayer: true,
