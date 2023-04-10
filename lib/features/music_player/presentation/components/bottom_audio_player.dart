@@ -20,8 +20,8 @@ class BottomAudioPlayer extends StatelessWidget {
       }
       return Container(
         key: Key(SharedConstant.bottomMusicPlayerWidget),
-        padding: const EdgeInsets.fromLTRB(15, 5, 10, 10),
-        height: MediaQuery.of(context).size.height * 0.18,
+        padding: const EdgeInsets.fromLTRB(15, 10, 10, 10),
+        height: MediaQuery.of(context).size.height * 0.25,
         decoration:
             BoxDecoration(color: SharedConstant.nativeWhite, boxShadow: [
           BoxShadow(
@@ -30,22 +30,64 @@ class BottomAudioPlayer extends StatelessWidget {
               blurRadius: 0.01,
               spreadRadius: 0.2)
         ]),
-        child: Row(
+        child: Column(
           children: [
-            _songImageDetail(context, state),
-            const SizedBox(
-              width: 10,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _songImageDetail(context, state),
+                const SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _songInformationDetail(context, state),
+                      _musicControllerDetail(context, state),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _songInformationDetail(context, state),
-                  _musicControllerDetail(context, state),
-                ],
-              ),
-            ),
+            Row(
+              children: [
+                Expanded(
+                  child: IconButton(
+                      onPressed: () {
+                        context.read<MusicPlayerCubit>().playPrevius();
+                      },
+                      icon: Icon(
+                        Icons.skip_previous,
+                        size: 50,
+                      )),
+                ),
+                Expanded(
+                  child: IconButton(
+                    icon: Icon(
+                      state.status == PlayerStatus.playing
+                          ? Icons.pause_circle
+                          : Icons.play_circle,
+                      size: 50,
+                    ),
+                    onPressed: () {
+                      context.read<MusicPlayerCubit>().setTogglePlay();
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: IconButton(
+                      onPressed: () {
+                        context.read<MusicPlayerCubit>().playNext();
+                      },
+                      icon: Icon(
+                        Icons.skip_next,
+                        size: 50,
+                      )),
+                ),
+              ],
+            )
           ],
         ),
       );
@@ -110,7 +152,9 @@ class BottomAudioPlayer extends StatelessWidget {
             builder: (context, state) {
           return IconButton(
               onPressed: () {
-                context.read<MusicPlayerCubit>().setRepeatMode(!state.isRepeated);
+                context
+                    .read<MusicPlayerCubit>()
+                    .setRepeatMode(!state.isRepeated);
               },
               icon: Icon(
                 state.isRepeated ? Icons.repeat_one : Icons.repeat,
@@ -121,7 +165,7 @@ class BottomAudioPlayer extends StatelessWidget {
         }),
         Consumer<PlaylistModel>(builder: (context, model, _) {
           return IconButton(
-            // tooltip: SharedConstant.musicLikeButtonKey,
+              // tooltip: SharedConstant.musicLikeButtonKey,
               key: Key(SharedConstant.musicLikeButtonKey),
               onPressed: () {
                 context
@@ -140,9 +184,7 @@ class BottomAudioPlayer extends StatelessWidget {
   }
 
   Widget _songImageDetail(BuildContext context, MusicPlayerState state) {
-    return Stack(
-      children: [
-        ClipRRect(
+    return  ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: Image.network(
               state.selectedSong!.artworkUrl100!,
@@ -155,24 +197,6 @@ class BottomAudioPlayer extends StatelessWidget {
                   size: 100,
                 );
               },
-            )),
-        Positioned(
-          left: 10,
-          bottom: 35,
-          child: IconButton(
-            icon: Icon(
-              state.status == PlayerStatus.playing
-                  ? Icons.pause_circle
-                  : Icons.play_circle,
-              size: 50,
-              color: SharedConstant.nativeWhite,
-            ),
-            onPressed: () {
-              context.read<MusicPlayerCubit>().setTogglePlay();
-            },
-          ),
-        ),
-      ],
-    );
+            ));
   }
 }
