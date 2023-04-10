@@ -19,8 +19,12 @@ class SongDataCubit extends Cubit<SongDataState> {
       value.fold((_) {
         emit(const SongDataState.failure("The song is not found"));
       }, (r) {
-        _sortMusicOrder(r);
+       bool isSorted = _sortMusicOrder(r);
+       if(isSorted){
         emit(SongDataState.success(r));
+       }else{
+        emit(const SongDataState.failure("The internet connection is in problem."));
+       } 
       });
     });
   }
@@ -33,19 +37,23 @@ class SongDataCubit extends Cubit<SongDataState> {
       }, (success) {
         if (success == null) {
           emit(const SongDataState.empty());
-        } else if (success.results.isEmpty) { 
-           emit(const SongDataState.empty());
-        }else {
+        } else if (success.results.isEmpty) {
+          emit(const SongDataState.empty());
+        } else {
           emit(SongDataState.success(success));
         }
       });
     });
   }
 
-  void _sortMusicOrder(ItuneEntities song) {
-    song.results.sort((a, b) {
-      return a.trackName![0].compareTo(b.trackName![0]);
-    });
+  bool _sortMusicOrder(ItuneEntities? song) {
+    if (song != null && song.results.isNotEmpty) {
+      song.results.sort((a, b) {
+        return a.trackName![0].compareTo(b.trackName![0]);
+      });
+      return true;
+    }
+    return false;
   }
 }
 
