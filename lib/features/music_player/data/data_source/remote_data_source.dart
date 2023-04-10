@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:music_cast/commons/errors/exceptions.dart';
 import 'package:music_cast/features/music_player/data/models/itunes_model.dart';
 import 'package:music_cast/commons/constants/constants.dart';
 import 'package:music_cast/commons/errors/errors.dart';
@@ -31,7 +32,7 @@ class RemoteDataServiceImpl implements RemoteDataSource {
       dynamic decodedResult = jsonDecode(response.body);
       return ItunesModel.fromJson(decodedResult);
     } catch (exception) {
-      throw RemoteServerFailure();
+      throw ServerException();
     }
   }
 
@@ -47,7 +48,7 @@ class RemoteDataServiceImpl implements RemoteDataSource {
       dynamic decodedResult = jsonDecode(response.body);
       return ItunesModel.fromJson(decodedResult);
     } catch (_) {
-      throw RemoteServerFailure();
+      throw ServerException();
     }
   }
 }

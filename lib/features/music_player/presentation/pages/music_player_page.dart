@@ -232,6 +232,7 @@ class _ErrorMessage extends StatelessWidget {
     return Center(
       child: Column(
         children: [
+          SizedBox(height: MediaQuery.of(context).size.height * 0.2,),
           Text(
             message,
             style: GoogleFonts.dmMono(),

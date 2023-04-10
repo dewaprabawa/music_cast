@@ -2,6 +2,7 @@ import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:music_cast/commons/errors/errors.dart';
+import 'package:music_cast/commons/errors/exceptions.dart';
 import 'package:music_cast/features/music_player/data/data_source/remote_data_source.dart';
 import 'package:music_cast/features/music_player/data/models/itunes_model.dart';
 
@@ -83,7 +84,7 @@ void main() {
       final call = remoteDataSource.getSongsByName;
 
       // assert
-      expect(() => call('invalid'), throwsA(isA<RemoteServerFailure>()));
+      expect(() => call('invalid'), throwsA(isA<ServerException>()));
     });
 
     test(
@@ -97,7 +98,7 @@ void main() {
       final call = remoteDataSource.getSongs;
 
       // assert
-      expect(() => call(), throwsA(isA<RemoteServerFailure>()));
+      expect(() => call(), throwsA(isA<ServerException>()));
     });
   });
 }
