@@ -56,17 +56,17 @@ class MusicPlayerCubit extends Cubit<MusicPlayerState> {
   //play next selected song to the music player.
   void playNext() async {
     if (state.songs.isNotEmpty) {
-      int prevIndex = 0;
+      int nextIndex = 0;
       if (state.selectedIndexMusic < state.songs.length - 1) {
-        prevIndex = state.selectedIndexMusic;
-        state.copyWith(selectedPlayIndex: prevIndex++);
+        nextIndex = state.selectedIndexMusic;
+        state.copyWith(selectedPlayIndex: nextIndex++);
       }
-      playMusic(playIndex: prevIndex, currentSong: state.songs[prevIndex]);
+      playMusic(playIndex: nextIndex, selectedSong: state.songs[nextIndex]);
     }
   }
 
   //play previous selected song to the music player.
-  void playPrevius() {
+  void playPrevious() {
     if (state.songs.isNotEmpty) {
       int prevIndex = 0;
       if (state.selectedIndexMusic <= 0) {
@@ -74,27 +74,28 @@ class MusicPlayerCubit extends Cubit<MusicPlayerState> {
       } else {
         prevIndex = state.selectedIndexMusic - 1;
       }
-      playMusic(playIndex: prevIndex, currentSong: state.songs[prevIndex]);
+      playMusic(playIndex: prevIndex, selectedSong: state.songs[prevIndex]);
     }
   }
 
-  Future<void> _setPathURLsong(String? url) async {
+  Future<void> _setPath(String? url) async {
     await _audioPlayer.play(UrlSource(url ?? ""));
   }
 
   // Plays the selected song.
-  Future<void> playMusic({int? playIndex, ItuneEntity? currentSong}) async {
+  Future<void> playMusic({int? playIndex, ItuneEntity? selectedSong}) async {
     try {
-      if (currentSong != null) {
+      if (selectedSong != null) {
+
         _startListenDurationAndPosition();
 
-        await _setPathURLsong(currentSong.previewUrl);
+        await _setPath(selectedSong.previewUrl);
 
         emit(state.copyWith(
             isShowPlayer: true,
             status: PlayerStatus.playing,
             selectedPlayIndex: playIndex,
-            selectedSong: currentSong));
+            selectedSong: selectedSong));
       }
     } on Exception catch (e) {
       _stopMusic();
@@ -156,10 +157,12 @@ class MusicPlayerCubit extends Cubit<MusicPlayerState> {
 
     _onCompletionSubscription =
         _audioPlayer.onPlayerComplete.listen((event) async {
+          
+       // When the repeat mode active, this code executed   
       if (state.isRepeated) {
         playMusic(
             playIndex: state.selectedIndexMusic,
-            currentSong: state.selectedSong);
+            selectedSong: state.selectedSong);
         return;
       }
 
@@ -172,7 +175,7 @@ class MusicPlayerCubit extends Cubit<MusicPlayerState> {
         currentPlayIndex++;
         playMusic(
             playIndex: currentPlayIndex,
-            currentSong: state.songs[currentPlayIndex]);
+            selectedSong: state.songs[currentPlayIndex]);
         await Future.delayed(const Duration(milliseconds: 1000));
         _indexIsChangingCount -= 1;
       } else {
@@ -181,7 +184,7 @@ class MusicPlayerCubit extends Cubit<MusicPlayerState> {
         currentPlayIndex = 0;
         playMusic(
             playIndex: currentPlayIndex,
-            currentSong: state.songs[currentPlayIndex]);
+            selectedSong: state.songs[currentPlayIndex]);
         await Future.delayed(const Duration(milliseconds: 1000));
         _indexIsChangingCount -= 1;
       }

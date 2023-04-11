@@ -1,6 +1,3 @@
-import 'dart:ffi';
-
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:music_cast/commons/usecase/usecase.dart';
 import 'package:music_cast/features/music_player/domain/entities/itunes_entity.dart';
@@ -43,10 +40,10 @@ class PlaylistModel extends ChangeNotifier {
   Future<void> startFetchPlaylist() async {
     _setState(seStatus: PlaylistStatus.Progress);
     await _fetchPlaylistUseCase.call(NoParams()).then((either) {
-      either.fold((l) {
+      either.fold((_) {
         _setState(seStatus: PlaylistStatus.Failure);
-      }, (r) {
-        _setState(seStatus: PlaylistStatus.Success, playlist: r);
+      }, (data) {
+        _setState(seStatus: PlaylistStatus.Success, playlist: data);
       });
     });
   }
@@ -56,12 +53,12 @@ class PlaylistModel extends ChangeNotifier {
     await _checkIsSaveInPlaylistUseCase
         .call(entity.trackId.toString())
         .then((either) {
-      either.fold((l) {
+      either.fold((_) {
         _toggleSave = false;
         notifyListeners();
-      }, (r) {
-        _toggleSave = r;
-        debugPrint("---startCheckIsSaveInPlaylist--- ${r}");
+      }, (isSuccess) {
+        _toggleSave = isSuccess;
+        debugPrint("---startCheckIsSaveInPlaylist--- $isSuccess");
         notifyListeners();
       });
     });
@@ -86,7 +83,7 @@ class PlaylistModel extends ChangeNotifier {
       await _deleteFromPlaylistUseCase.call(id.toString()).then((either){
         either.fold((_){
             debugPrint("---Failure in delete playlist song---");
-        }, (r){
+        }, (_){
           this._playlists.removeWhere((element) => element.trackId == id);
         });
       });
