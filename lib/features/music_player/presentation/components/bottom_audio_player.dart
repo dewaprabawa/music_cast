@@ -56,7 +56,7 @@ class BottomAudioPlayer extends StatelessWidget {
                 Expanded(
                   child: IconButton(
                       onPressed: () {
-                        context.read<MusicPlayerCubit>().playPrevius();
+                        context.read<MusicPlayerCubit>().playPrevious();
                       },
                       icon: Icon(
                         Icons.skip_previous,

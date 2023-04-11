@@ -174,7 +174,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage>
                           // If the music player is not playing the selected song,
                           // start playing the selected song using the `playMusic` function
                           context.read<MusicPlayerCubit>().playMusic(
-                              currentSong: selectedSong, playIndex: playIndex);
+                              selectedSong: selectedSong, playIndex: playIndex);
                         }
                         // After playing the song, check if it is already saved in the playlist
                         context
